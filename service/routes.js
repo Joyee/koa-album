@@ -1,6 +1,8 @@
 const Router = require('koa-router')
 const account = require('./actions/account')
+const photo = require('./actions/photo')
 const router = new Router()
+const auth = require('./middleware/auth')
 
 async function responseOK(context, next) {
   context.body = {
@@ -59,6 +61,30 @@ router.get('/login/errcode/check/:code', async (context, next) => {
     }
   }
   await login() // 启动递归查询
+})
+// 创建相册
+router.post('/album', auth, async (context, next) => {
+  const { name } = context.request.body
+  await photo.addAlbum(context.state.user.id, name)
+  await next()
+}, responseOK)
+// 修改相册
+router.put('/album/:id', auth, async (context, next) => {
+  await photo.updateAlbum(context.params.id, context.body.name, context.user)
+  await next()
+}, responseOK)
+// 删除相册
+router.del('/album/:id', auth, async (context, next) => {
+  await photo.deleteAlbum(context.params.id, context.user)
+  await next()
+}, responseOK)
+// 相册列表 小程序中展示每个相册中照片的数量
+router.get('/xcx/album', auth, async (context, next) => {
+  const albums = await photo.getAlbums(context.state.user.id)
+  context.body = {
+    status: 0,
+    data: albums
+  }
 })
 
 module.exports = router
