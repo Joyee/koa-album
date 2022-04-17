@@ -3,6 +3,15 @@ const { add } = require('../lib/db/album')
 const photo = require('../lib/db/photo')
 
 module.exports = {
+  async delete(id) {
+    await photo.delete(id)
+  },
+  async getPhotoById(id) {
+    await photo.getPhotoById(id)
+  },
+  async add(userId, url, albumId) {
+    await photo.add(userId, url, albumId)
+  },
   async addAlbum(userId, name) {
     return add(userId, name)
   },

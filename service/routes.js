@@ -1,4 +1,7 @@
+const path = require('path')
 const Router = require('koa-router')
+const multer = require('koa-multer')
+const uuid = require('uuid')
 const account = require('./actions/account')
 const photo = require('./actions/photo')
 const router = new Router()
@@ -74,7 +77,7 @@ router.put('/album/:id', auth, async (context, next) => {
   await next()
 }, responseOK)
 // 删除相册
-router.del('/album/:id', auth, async (context, next) => {
+router.delete('/album/:id', auth, async (context, next) => {
   await photo.deleteAlbum(context.params.id, context.user)
   await next()
 }, responseOK)
@@ -86,5 +89,36 @@ router.get('/xcx/album', auth, async (context, next) => {
     data: albums
   }
 })
+// 定义为采用磁盘存储
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, 'uploads'),
+  filename(req, file, cb) { // 重命名 避免重名
+    const ext = path.extname(file.originalname)
+    cb(null, uuid.v4() + ext)
+  }
+})
+// 上传的中间件
+const uploader = multer({
+  storage
+})
+// 上传
+router.post('/photo', auth, uploader.single('file'), async (context, next) => {
+  const { file } = context.req // 读取上传的文件对象 由上传中间件提供
+  const { id } = context.req.body // 获取请求中传递的相册id
+  await photo.add(context.state.id, `https//{static.album.cn/${file.filename}}`, id)
+  await next()
+}, responseOK)
+
+router.delete('/photo/:id', auth, async (context, next) => {
+  const p = await photo.getPhotoById(context.params.id)
+  if (p) {
+    if (p.userId === context.state.user.id || context.state.user.isAmin) {
+      await photo.delete(context.params.id)
+    } else {
+      context.throw(403, '该用户无删除权限')
+    }
+  }
+  await next()
+}, responseOK)
 
 module.exports = router

@@ -12,8 +12,10 @@
   "dependencies": {
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
+    "koa-multer": "^1.0.2",
     "koa-router": "^10.1.1",
     "koa-static": "^5.0.0",
-    "mongoose": "^6.3.0"
+    "mongoose": "^6.3.0",
+    "uuid": "^8.3.2"
   }
 }
