@@ -20,7 +20,13 @@ function decode(str) {
   }
 }
 
+// 生成二维码
+function encodeErCode() {
+  return encode(Math.random())
+}
+
 module.exports = {
   encode,
-  decode
+  decode,
+  encodeErCode,
 }

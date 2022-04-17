@@ -23,10 +23,19 @@ const userSchema = new Schema({
     type: String
   },
   userType: { // 用户类型：标记管理员、普通用户、禁用用户
-    type: Number
+    type: Number,
+    default: 0,
   }
+})
+
+const codeSchema = new Schema({
+  code: { // 存储二维码字符串
+    type: String,
+  },
+  sessionKey: String, // 存储小程序的登录凭证
 })
 
 module.exports = {
   User: mongoose.model('User', userSchema),
+  Code: mongoose.model('Code', codeSchema),
 }
