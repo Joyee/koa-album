@@ -121,4 +121,20 @@ router.delete('/photo/:id', auth, async (context, next) => {
   await next()
 }, responseOK)
 
+function getPageParams(context) {
+  return {
+    pageIndex: parseInt(context.params.pageIndex) || 1,
+    pageSize: parseInt(context.params.pageSize) || 10
+  }
+}
+// 定义用户列表接口
+router.get('/admin/user', auth, async (context, next) => {
+  const pageParams = getPageParams(context)
+  context.body = {
+    status: 0,
+    data: await account.getUsers(pageParams.pageIndex, pageParams.pageSize)
+  }
+  await next()
+})
+
 module.exports = router

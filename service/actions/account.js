@@ -2,6 +2,8 @@ const { getSession } = require('../lib/wx')
 const { encodeErCode, decode } = require('../lib/crypto')
 const { add, removeData, getSessionKey, } = require('../lib/db/code')
 const { Code } = require('../lib/db/model')
+const { getUsersCount, getUsers } = require('../lib/db/user')
+
 module.exports = {
   async login(code) {
     const session = await getSession(code)
@@ -44,6 +46,13 @@ module.exports = {
       await removeData(code) // 查询到登录凭证后 从数据库中清除当前数据
     }
     return sessionKey
+  },
+  async getUsers(pageIndex, pageSize) {
+    const { count, users } = await Promise.all([getUsersCount(), getUsers(pageIndex, pageSize)])
+    return {
+      count,
+      data: users
+    }
   },
 }
 

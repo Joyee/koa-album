@@ -23,7 +23,7 @@ module.exports = async function (context, next) {
     context.logger.info(`[auth] 根据sessionKey未获取到用户`)
     context.throw(401, 'session 过期')
   }
-
+  // 所有访问后台管理系统的用户都必须是管理员 以/admin 开头的请求都要求具有管理员权限
   if (/^\/admin/i.test(context.url) && !context.state.user.isAdmin) {
     context.logger.info(`[auth] 当前的${context.url} 必须为管理员访问.`)
     context.throw(401, '当前资源必须管理员才能访问')
