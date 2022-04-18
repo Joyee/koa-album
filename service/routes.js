@@ -162,5 +162,13 @@ router.get('/album/photo/:type', auth, async (context, next) => {
     data: photos
   }
 })
+/**
+ * 审核照片、取消审核照片
+ */
+router.put('/admin/photo/approve/:id/:state', auth, async (context, next) => {
+  const params = context.params
+  await photo.approve(params.id, params.state)
+  await next()
+}, responseOK)
 
 module.exports = router

@@ -61,4 +61,7 @@ module.exports = {
         return { count, data: photos }
     }
   },
+  async approve(id, state) {
+    return photo.approve(id, state)
+  },
 }

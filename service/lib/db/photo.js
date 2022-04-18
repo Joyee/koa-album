@@ -77,5 +77,8 @@ module.exports = {
     return Photo.count({
       isDelete: false
     })
+  },
+  async approve(id, state) {
+    return Photo.updateOne({ _id: id }, { isApproved: state || true }) // 未获取到状态 默认为审核操作
   }
 }
