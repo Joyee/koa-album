@@ -2,7 +2,7 @@ const { getSession } = require('../lib/wx')
 const { encodeErCode, decode } = require('../lib/crypto')
 const { add, removeData, getSessionKey, } = require('../lib/db/code')
 const { Code } = require('../lib/db/model')
-const { getUsersCount, getUsers } = require('../lib/db/user')
+const { getUsersCount, getUsers, setUserType, updateUserType } = require('../lib/db/user')
 
 module.exports = {
   async login(code) {
@@ -53,6 +53,9 @@ module.exports = {
       count,
       data: users
     }
+  },
+  async setUserType(id, userType) {
+    await updateUserType(id, userType)
   },
 }
 

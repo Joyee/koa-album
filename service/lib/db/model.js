@@ -22,7 +22,7 @@ const userSchema = new Schema({
   avatar: {
     type: String
   },
-  userType: { // 用户类型：标记管理员、普通用户、禁用用户
+  userType: { // 用户类型：标记管理员 1、普通用户0、禁用用户-1
     type: Number,
     default: 0,
   }

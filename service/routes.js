@@ -136,5 +136,14 @@ router.get('/admin/user', auth, async (context, next) => {
   }
   await next()
 })
+// 设置/取消设置管理员权限、禁用/取消禁用用户
+router.get('/admin/user/:id/userType/:type', auth, async (context, next) => {
+  const body = {
+    status: 0,
+    data: await account.setUserType(context.params.id, context.params.type)
+  }
+  context.body = body
+  await next()
+})
 
 module.exports = router
