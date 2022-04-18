@@ -145,5 +145,22 @@ router.get('/admin/user/:id/userType/:type', auth, async (context, next) => {
   context.body = body
   await next()
 })
+/**
+ * 获取待审核照片列表、已审核照片列表、审核被拒绝的照片列表
+ * type类型如下：
+ * pending：待审核列表
+ * accepted：审核通过列表
+ * rejected：审核未通过列表
+ * all: 获取所有列表
+ */
+router.get('/album/photo/:type', auth, async (context, next) => {
+  const params = getPageParams(context.params)
+  // 按照审核状态获取数据
+  const photos = await photo.getPhotosByType(params.type, params.pageIndex, params.pageSize)
+  context.body = {
+    status: 0,
+    data: photos
+  }
+})
 
 module.exports = router

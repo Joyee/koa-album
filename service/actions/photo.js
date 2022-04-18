@@ -44,5 +44,21 @@ module.exports = {
         fm: ps[0] ? ps[0].url : null // 默认取第一张为封面
       }, item.toObject())
     }))
-  }
+  },
+  // 通过审核状态查询所有照片
+  async getPhotosByType(type, pageIndex, pageSize) {
+    let count, photos
+    switch (type) {
+      case 'pending': // 待审核
+        [count, photos] = await Promise.all([photo.getApprovingPhotosCount(), photo.getApprovingPhotos(pageIndex, pageSize)])
+        return { count, data: photos }
+      case 'accepted': // 审核通过
+        [count, photos] = await Promise.all([photo.getApprovedPhotosCount(), photo.getApprovedPhotos(pageIndex, pageSize)])
+        return { count, data: photos }
+      case 'rejected': // 审核被拒绝
+      default: // 所有
+        [count, photos] = await Promise.all([photo.getAllCount(), photo.getAll(pageIndex, pageSize)])
+        return { count, data: photos }
+    }
+  },
 }

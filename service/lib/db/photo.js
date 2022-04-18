@@ -30,4 +30,52 @@ module.exports = {
       isDelete: false
     })
   },
+  // 分页获取待审核照片列表
+  async getApprovingPhotos(pageIndex, pageSize) {
+    return Photo.find({
+      isApproved: null,
+      isDelete: false
+    }).limit(pageSize).skip((pageIndex - 1) * pageSize)
+  },
+  // 获取待审核列表数量
+  async getApprovingPhotosCount() {
+    return Photo.count({
+      isApproved: null,
+      isDelete: false
+    })
+  },
+  async getApprovedPhotos(pageIndex, pageSize) {
+    return Photo.find({
+      isApproved: true,
+      isDelete: false
+    }).limit(pageSize).skip((pageIndex - 1) * pageSize)
+  },
+  async getApprovedPhotosCount() {
+    return Photo.count({
+      isApproved: true,
+      isDelete: false
+    })
+  },
+  async getUnApprovedPhotos(pageIndex, pageSize) {
+    return Photo.find({
+      isApproved: false,
+      isDelete: false
+    }).limit(pageSize).skip((pageIndex - 1) * pageSize)
+  },
+  async getUnApprovedPhotosCount() {
+    return Photo.count({
+      isApproved: false,
+      isDelete: false
+    })
+  },
+  async getAll(pageIndex, pageSize) {
+    return Photo.find({
+      isDelete: false
+    }).limit(pageSize).skip((pageIndex - 1) * pageSize)
+  },
+  async getAllCount() {
+    return Photo.count({
+      isDelete: false
+    })
+  }
 }
